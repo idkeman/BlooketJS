@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131d">
+  <meta name="description" content="BlooketJS — an experimental JavaScript wrapper project for Blooket.">
+  <title>BlooketJS — Developer Index</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0c0f17;--panel:#141a27;--panel2:#192233;--line:#283449;--text:#eef3ff;--muted:#a6b3c9;--accent:#8b9cff;--green:#72dfb0;--yellow:#f2ca75}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 75% -15%,#26345a 0,transparent 45%),var(--bg);color:var(--text);font:16px/1.65 system-ui,-apple-system,Segoe UI,sans-serif}
+    a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}.wrap{width:min(1100px,calc(100% - 36px));margin:auto}
+    header{position:sticky;top:0;z-index:5;background:#0c0f17eF;border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.bar{height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-weight:800;letter-spacing:-.04em;font-size:20px;color:var(--text)}.brand span{color:var(--accent)}nav{display:flex;gap:22px;flex-wrap:wrap;font-size:14px}nav a{color:var(--muted)}
+    .hero{padding:92px 0 64px}.eyebrow{color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.14em;font-size:12px}.hero h1{font-size:clamp(42px,7vw,76px);line-height:1.02;letter-spacing:-.06em;margin:16px 0}.hero p{max-width:680px;color:var(--muted);font-size:19px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 17px;border-radius:10px;background:var(--accent);color:#0c1020;font-weight:750}.btn.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+    .notice{border:1px solid #725b2d;background:#2a2418;border-radius:12px;padding:16px 18px;color:#f5dfae;margin:0 0 38px}.notice strong{color:#fff0c8}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:linear-gradient(145deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:22px}.card h3{margin:0 0 8px}.card p{margin:0;color:var(--muted)}section{padding:38px 0;scroll-margin-top:85px}h2{font-size:30px;letter-spacing:-.04em;margin:0 0 10px}.lead{color:var(--muted);margin:0 0 22px}.code{position:relative;background:#080b12;border:1px solid var(--line);border-radius:12px;padding:18px;overflow:auto;color:#d9e2f5;font:13px/1.7 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre}
+    .pill{display:inline-block;padding:3px 9px;border-radius:999px;background:#28334a;color:#c8d3ff;font-size:12px;font-weight:700}.list{padding-left:20px;color:var(--muted)}.list li{margin:8px 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}.api-row{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:15px 0;border-bottom:1px solid var(--line)}.api-row p{margin:4px 0 0;color:var(--muted)}footer{border-top:1px solid var(--line);padding:28px 0 44px;color:var(--muted);font-size:14px}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.two{grid-template-columns:1fr}.bar{height:auto;min-height:68px;padding:12px 0;align-items:flex-start;flex-direction:column}nav{gap:14px}.hero{padding:62px 0 42px}}
+  </style>
+</head>
+<body>
+<header><div class="wrap bar"><a class="brand" href="#">Blooket<span>JS</span></a><nav aria-label="Main navigation"><a href="#overview">Overview</a><a href="#quick-start">Quick start</a><a href="#api">API outline</a><a href="#status">Status</a><a href="https://github.com/idkeman/BlooketJS">GitHub</a></nav></div></header>
+<main class="wrap">
+  <section class="hero" id="overview">
+    <div class="eyebrow">Experimental developer project</div>
+    <h1>Build with<br><span style="color:var(--accent)">BlooketJS.</span></h1>
+    <p>A JavaScript wrapper concept for interacting with Blooket game sessions. This page collects the project overview, the original example, and the current implementation status in one place.</p>
+    <div class="actions"><a class="btn" href="https://github.com/idkeman/BlooketJS">View source on GitHub ↗</a><a class="btn secondary" href="#quick-start">Explore the example</a></div>
+  </section>
+  <div class="notice"><strong>Important: work in progress.</strong> The repository currently has no published source implementation or package manifest. The API shown below comes from the README and has not been verified as working. Do not assume that installation, authentication, or game actions currently succeed.</div>
+  <div class="grid">
+    <article class="card"><span class="pill">JavaScript</span><h3>Node-oriented</h3><p>The README demonstrates a Node.js-style client using CommonJS and an environment variable for a token.</p></article>
+    <article class="card"><span class="pill">Event-driven</span><h3>Client events</h3><p>The proposed interface uses events for readiness, joining, incoming questions, and game completion.</p></article>
+    <article class="card"><span class="pill">Experimental</span><h3>Not production-ready</h3><p>Blooket may change its private services at any time. Compatibility and permission boundaries are not established.</p></article>
+  </div>
+  <section id="quick-start">
+    <h2>Quick start example</h2>
+    <p class="lead">This is a cleaned-up version of the usage pattern in the repository README—not a tested installation guide.</p>
+    <div class="code">const { Client } = require("blooketjs");
+
+const client = new Client({
+  token: process.env.BLOOKET_TOKEN
+});
+
+client.on("ready", () => {
+  console.log("Client is ready");
+});
+
+client.on("join", () => {
+  console.log("Joined the game");
+});
+
+client.on("question", question => {
+  console.log("Question received:", question);
+});
+
+client.on("end", () => {
+  console.log("The game has ended");
+});
+
+client.join(123456, "ExampleName");</div>
+    <ul class="list"><li>The README does not provide a working package installation command or published package version.</li><li>Never place account tokens in browser JavaScript, public repositories, or client-side HTML.</li><li>Only test against accounts and sessions you are authorized to use; avoid automation that disrupts other players or bypasses game rules.</li></ul>
+  </section>
+  <section id="api">
+    <h2>Proposed API surface</h2>
+    <p class="lead">These names are taken from the README example. Their actual signatures and behavior still need to be confirmed in source code.</p>
+    <div class="card">
+      <div class="api-row"><div><strong><code>new Client(options)</code></strong><p>Creates the client. The README shows a <code>token</code> option.</p></div><span class="pill">Unverified</span></div>
+      <div class="api-row"><div><strong><code>client.join(gameId, name)</code></strong><p>Intended to join a game using a game identifier and display name.</p></div><span class="pill">Unverified</span></div>
+      <div class="api-row"><div><strong><code>ready</code> / <code>join</code></strong><p>Events shown for client readiness and successful joining.</p></div><span class="pill">Unverified</span></div>
+      <div class="api-row"><div><strong><code>question</code></strong><p>Event shown for receiving a question object.</p></div><span class="pill">Unverified</span></div>
+      <div class="api-row"><div><strong><code>end</code></strong><p>Event shown when a game session ends.</p></div><span class="pill">Unverified</span></div>
+    </div>
+  </section>
+  <section id="status">
+    <h2>Project status</h2>
+    <div class="two">
+      <article class="card"><h3>Available in this repository</h3><ul class="list"><li>Project README and example interface</li><li>License file</li><li>Git repository history</li></ul></article>
+      <article class="card"><h3>Still needed</h3><ul class="list"><li>Actual source code and package metadata</li><li>Documented, validated method and event signatures</li><li>Supported Node.js version and installation steps</li><li>Tests and compatibility notes</li></ul></article>
+    </div>
+    <div class="actions"><a class="btn secondary" href="https://github.com/idkeman/BlooketJS/issues">Report an issue ↗</a><a class="btn secondary" href="https://github.com/idkeman/BlooketJS/blob/main/README.md">Read the README ↗</a></div>
+  </section>
+</main>
+<footer><div class="wrap">BlooketJS is an independent, experimental project and is not affiliated with or endorsed by Blooket. This page does not provide or imply an official Blooket API.</div></footer>
+</body>
+</html>
