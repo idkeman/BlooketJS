@@ -1,93 +1,167 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#10131d">
-<title>BlooketJS — Live Connector</title>
-<style>
-:root{color-scheme:dark;--bg:#0b0e16;--panel:#141a28;--panel2:#1b2334;--line:#2b354b;--muted:#9aa8c1;--text:#f4f7ff;--accent:#8b7cff;--accent2:#5ce1c2;--danger:#ff7e8c}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% 0%,#202347 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
-main{max-width:1100px;margin:auto;padding:38px 22px 70px}.top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:34px}.brand{display:flex;gap:13px;align-items:center}.logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#4b9cff);font-weight:900;font-size:20px}.eyebrow{color:var(--accent2);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:800}.brand h1{margin:1px 0;font-size:21px}.status{display:flex;align-items:center;gap:9px;padding:9px 13px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:#e4ad5d}.hero{margin-bottom:25px}.hero h2{font-size:clamp(30px,5vw,48px);line-height:1.08;letter-spacing:-.04em;margin:0 0 12px}.hero p{color:var(--muted);max-width:680px;margin:0}.layout{display:grid;grid-template-columns:230px 1fr;gap:18px}.nav,.panel,.notice{background:rgba(20,26,40,.92);border:1px solid var(--line);border-radius:18px}.nav{padding:10px;height:max-content;display:grid;gap:6px}.nav button{border:0;background:transparent;color:var(--muted);text-align:left;padding:13px;border-radius:11px;font:inherit;cursor:pointer}.nav button.active{background:var(--panel2);color:white}.panel{padding:24px;min-height:430px}.panel h3{font-size:21px;margin:0 0 6px}.sub{color:var(--muted);margin:0 0 22px;font-size:13px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:grid;gap:7px}.field.full{grid-column:1/-1}label{font-size:12px;color:#c6d0e2;font-weight:700}input,select{width:100%;padding:12px 13px;border-radius:10px;border:1px solid var(--line);background:#0e1421;color:white;font:inherit;outline:none}input:focus,select:focus{border-color:var(--accent)}.help{font-size:11px;color:var(--muted)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}button.primary,button.secondary{border:0;border-radius:10px;padding:12px 17px;font:inherit;font-weight:800;cursor:pointer}.primary{background:linear-gradient(100deg,var(--accent),#6598ff);color:white}.secondary{background:var(--panel2);color:#e5eaff;border:1px solid var(--line)!important}.primary:disabled{opacity:.55;cursor:wait}.notice{padding:14px 16px;margin-top:17px;color:var(--muted);font-size:12px}.result{display:none;margin-top:18px;padding:14px;border-radius:12px;background:#0e1922;border:1px solid #254a48;color:#c8fff0;white-space:pre-wrap;overflow-wrap:anywhere}.result.error{background:#24141b;border-color:#65313d;color:#ffc2c9}.result.show{display:block}.log{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}.log h4{margin:0 0 8px;font-size:12px;color:#c5cee0}.log p{margin:4px 0;color:var(--muted);font-size:12px}.footer{margin-top:25px;color:#78869f;font-size:11px}.hidden{display:none!important}
-@media(max-width:720px){main{padding:22px 14px 50px}.top{align-items:flex-start;flex-direction:column}.layout{grid-template-columns:1fr}.nav{display:flex;overflow:auto}.nav button{white-space:nowrap}.panel{padding:18px}.fields{grid-template-columns:1fr}.field.full{grid-column:auto}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0e16">
+  <title>BlooketJS — Connector</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b0e16;--panel:#141a28;--panel2:#1b2334;--line:#2b354b;--muted:#9aa8c1;--text:#f4f7ff;--accent:#8b7cff;--mint:#5ce1c2;--warn:#e4ad5d;--bad:#ff7e8c}
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(ellipse at 18% 0%,#202347 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+    main{width:min(980px,100%);margin:auto;padding:34px 20px 64px}
+    header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:42px}
+    .brand{display:flex;align-items:center;gap:13px}.logo{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#4b9cff);font-weight:900;font-size:21px}
+    .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mint);font-weight:800}
+    h1{font-size:21px;margin:1px 0}.status{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:999px;padding:9px 13px;color:var(--muted);font-size:12px}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--warn)}
+    .hero{margin-bottom:27px}.hero h2{font-size:clamp(32px,6vw,51px);line-height:1.08;letter-spacing:-.045em;margin:0 0 13px;max-width:780px}
+    .hero p{max-width:720px;color:var(--muted);margin:0}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:17px}
+    .card{background:rgba(20,26,40,.94);border:1px solid var(--line);border-radius:18px;padding:23px}
+    .card h3{font-size:18px;margin:0 0 5px}.sub{font-size:13px;color:var(--muted);margin:0 0 19px}
+    .notice{padding:14px 15px;border:1px solid #56452a;background:#211b13;color:#e8d6b6;border-radius:12px;font-size:12px;margin:17px 0}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:17px}
+    a.button,button{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;padding:11px 15px;text-decoration:none;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+    .primary{background:linear-gradient(100deg,var(--accent),#6598ff);color:white}.secondary{background:var(--panel2);color:#e5eaff;border:1px solid var(--line)!important}
+    label{display:block;font-size:12px;color:#c6d0e2;font-weight:700;margin-bottom:7px}
+    input{width:100%;padding:12px 13px;border-radius:10px;border:1px solid var(--line);background:#0e1421;color:white;font:inherit;outline:none}
+    input:focus{border-color:var(--accent)}.help{font-size:11px;color:var(--muted);margin-top:7px}
+    .result{display:none;margin-top:15px;padding:13px;border-radius:11px;background:#10201f;border:1px solid #28534b;color:#c8fff0;font-size:12px;overflow-wrap:anywhere}
+    .result.error{display:block;background:#24141b;border-color:#65313d;color:#ffc2c9}.result.show{display:block}
+    .facts{display:grid;gap:12px;margin-top:15px}.fact{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:10px;font-size:12px}.fact span:first-child{color:var(--muted)}.fact strong{font-weight:700;text-align:right}
+    .activity{margin-top:15px;padding-top:13px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    footer{margin-top:22px;color:#78869f;font-size:11px}
+    @media(max-width:720px){main{padding:22px 14px 48px}header{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.card{padding:18px}}
+  </style>
 </head>
 <body>
 <main>
-<header class="top">
- <div class="brand"><div class="logo">B</div><div><div class="eyebrow">Community connector</div><h1>BlooketJS</h1></div></div>
- <div class="status"><span class="dot" id="healthDot"></span><span id="healthText">Backend not checked</span></div>
-</header>
-<section class="hero"><h2>Connect to live Blooket games.</h2><p>Player joining, host creation, and set creation in one workspace. The connector uses an older community wrapper, so every live operation is reported honestly and may need compatibility updates.</p></section>
-<div class="layout">
- <nav class="nav" aria-label="Connector sections">
-  <button class="active" data-tab="player">↗ Join a game</button>
-  <button data-tab="host">▣ Host a game</button>
-  <button data-tab="sets">＋ Create a set</button>
-  <button data-tab="settings">⚙ Connection</button>
- </nav>
- <section class="panel">
-  <div id="player" class="tab">
-   <h3>Join a live game</h3><p class="sub">Join as one regular player. This does not create extra accounts or automate answers.</p>
-   <form id="joinForm"><div class="fields">
-    <div class="field"><label for="pin">Game PIN</label><input id="pin" inputmode="numeric" pattern="[0-9]{4,8}" maxlength="8" placeholder="Enter game PIN" required></div>
-    <div class="field"><label for="playerName">Player name</label><input id="playerName" maxlength="16" placeholder="Choose a display name" required></div>
-    <div class="field"><label for="blook">Blook</label><select id="blook"><option>Dog</option><option>Cat</option><option>Bear</option><option>Chicken</option><option>Duck</option><option>Fox</option><option>Owl</option><option>Penguin</option><option>Rabbit</option><option>Sloth</option><option>Unicorn</option></select></div>
-   </div><div class="actions"><button class="primary" type="submit">Send join request</button><button class="secondary" type="button" id="openPlay">Open Blooket player page</button></div></form>
-   <div class="notice">The upstream wrapper sends WebSocket join messages to multiple legacy server ranges and reports “Joined” before it receives a server acknowledgement. A successful response here means the request was sent, not that Blooket confirmed entry. Verify the player appears in the live lobby.</div>
+  <header>
+    <div class="brand">
+      <div class="logo">B</div>
+      <div><div class="eyebrow">Independent community project</div><h1>BlooketJS</h1></div>
+    </div>
+    <div class="status"><span class="dot" id="healthDot"></span><span id="healthText">Backend not checked</span></div>
+  </header>
+
+  <section class="hero">
+    <h2>A clean connection layer for Blooket.</h2>
+    <p>This GitHub Pages dashboard checks your Railway service and keeps the integration boundary separate from the website. Live-game access requires an integration explicitly authorized by Blooket.</p>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h3>Backend connection</h3>
+      <p class="sub">Point this dashboard to the public domain generated by your Railway service.</p>
+      <form id="connectionForm">
+        <label for="apiUrl">Railway API base URL</label>
+        <input id="apiUrl" type="url" inputmode="url" placeholder="https://your-service.up.railway.app" autocomplete="url" required>
+        <div class="help">Use the HTTPS domain shown in Railway → Service → Settings → Networking. Do not include a trailing API path.</div>
+        <div class="actions">
+          <button class="primary" type="submit">Save and test connection</button>
+          <button class="secondary" type="button" id="testConnection">Test again</button>
+        </div>
+      </form>
+      <div class="result" id="result" role="status" aria-live="polite"></div>
+      <div class="activity" id="activity">No connection checks have been run in this browser.</div>
+    </section>
+
+    <aside class="card">
+      <h3>Integration status</h3>
+      <p class="sub">What this connector can currently do.</p>
+      <div class="facts">
+        <div class="fact"><span>Railway backend</span><strong id="backendState">Not checked</strong></div>
+        <div class="fact"><span>Blooket integration</span><strong id="providerState">Not authorized</strong></div>
+        <div class="fact"><span>Live-game controls</span><strong>Disabled</strong></div>
+        <div class="fact"><span>Credential storage</span><strong>None</strong></div>
+      </div>
+      <div class="notice">Blooket's published terms prohibit unauthorized bots, reverse-engineering, and software that changes or facilitates gameplay. This project does not connect to private game sockets or undocumented endpoints.</div>
+      <div class="actions">
+        <a class="button primary" href="https://play.blooket.com/" target="_blank" rel="noopener noreferrer">Open Blooket player</a>
+        <a class="button secondary" href="https://www.blooket.com/" target="_blank" rel="noopener noreferrer">Open Blooket host</a>
+      </div>
+    </aside>
   </div>
-  <div id="host" class="tab hidden">
-   <h3>Create a hosted game</h3><p class="sub">Create a game from a Blooket set using your own account authorization token.</p>
-   <form id="hostForm"><div class="fields">
-    <div class="field"><label for="hostName">Host display name</label><input id="hostName" maxlength="32" placeholder="Your Blooket name" required></div>
-    <div class="field"><label for="setId">Question set ID</label><input id="setId" placeholder="Paste the ID from a Blooket set URL" required></div>
-    <div class="field"><label for="gameMode">Game mode</label><select id="gameMode"><option>Gold</option><option>Factory</option><option>Cafe</option><option>Racing</option><option>Tower Defense</option><option>Battle Royale</option></select></div>
-    <div class="field"><label for="modeSetting">Game setting</label><select id="modeSetting"><option>Time</option><option>Amount</option></select></div>
-    <div class="field"><label for="plus">Blooket Plus</label><select id="plus"><option value="false">No</option><option value="true">Yes</option></select></div>
-    <div class="field full"><label for="hostToken">Blooket authorization token</label><input id="hostToken" type="password" autocomplete="off" placeholder="Paste token only if you understand the risk" required><span class="help">Never paste your account password. This token is sent to the API backend you configure, and is not saved by this page. Only use a backend you control.</span></div>
-   </div><div class="actions"><button class="primary" type="submit">Create hosted game</button><button class="secondary" type="button" id="openHost">Open Blooket host</button></div></form>
-   <div class="notice">Blooket has no public, stable host API. This uses the community wrapper's undocumented host endpoint. It may stop working when Blooket changes its service.</div>
-  </div>
-  <div id="sets" class="tab hidden">
-   <h3>Create a question set</h3><p class="sub">Create a new set shell in your account. The upstream wrapper does not implement adding questions or editing a set.</p>
-   <form id="setForm"><div class="fields">
-    <div class="field"><label for="author">Author name</label><input id="author" maxlength="40" placeholder="Your Blooket name" required></div>
-    <div class="field"><label for="title">Set title</label><input id="title" maxlength="80" placeholder="My new set" required></div>
-    <div class="field full"><label for="description">Description</label><input id="description" maxlength="180" placeholder="What is this set about?"></div>
-    <div class="field"><label for="privateSet">Visibility</label><select id="privateSet"><option value="false">Public</option><option value="true">Private</option></select></div>
-    <div class="field"><label for="setToken">Blooket authorization token</label><input id="setToken" type="password" autocomplete="off" placeholder="Authorization token" required></div>
-   </div><div class="actions"><button class="primary" type="submit">Create set</button></div></form>
-   <div class="notice">Question editing and image uploads are not implemented by this upstream library. The connector will not claim those features are available.</div>
-  </div>
-  <div id="settings" class="tab hidden">
-   <h3>Backend connection</h3><p class="sub">The website is static; live Blooket requests run on a separate Node service.</p>
-   <form id="settingsForm"><div class="fields"><div class="field full"><label for="apiUrl">API base URL</label><input id="apiUrl" type="url" placeholder="https://your-replit-app.replit.app" required><span class="help">Paste your published Replit backend URL here.</span></div></div><div class="actions"><button class="primary" type="submit">Save connection</button><button class="secondary" type="button" id="testConnection">Test backend</button></div></form>
-   <div class="notice">The API URL is saved in this browser. Account tokens are never saved in local storage. The backend should be deployed by you and restricted to your website origin.</div>
-  </div>
-  <div id="result" class="result" role="status" aria-live="polite"></div>
-  <div class="log"><h4>ACTIVITY</h4><div id="activity"><p>Connector ready. Configure and test the backend to begin.</p></div></div>
- </section>
-</div>
-<p class="footer">BlooketJS is an independent community project and is not affiliated with or endorsed by Blooket. Do not use this tool to disrupt games, evade platform restrictions, or manipulate scores/rewards.</p>
+
+  <footer>BlooketJS is independent and is not affiliated with or endorsed by Blooket. The Railway service currently provides health and integration-status endpoints only. No Blooket passwords, session cookies, or authorization tokens are requested or stored.</footer>
 </main>
 <script>
-const $=id=>document.getElementById(id);const tabs=[...document.querySelectorAll('[data-tab]')];
-let apiBase=localStorage.getItem('blooketjs_api')||'';
-$('apiUrl').value=apiBase;
-tabs.forEach(btn=>btn.addEventListener('click',()=>{tabs.forEach(x=>x.classList.toggle('active',x===btn));document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('hidden',x.id!==btn.dataset.tab));clearResult()}));
-function log(message){const p=document.createElement('p');p.textContent=new Date().toLocaleTimeString()+' — '+message;$('activity').prepend(p);while($('activity').children.length>7)$('activity').lastChild.remove()}
-function show(message,error=false){const el=$('result');el.textContent=message;el.classList.add('show');el.classList.toggle('error',error)}
-function clearResult(){$('result').classList.remove('show','error')}
-function setHealth(ok,msg){$('healthDot').style.background=ok?'#5ce1c2':'#e4ad5d';$('healthText').textContent=msg}
-function base(){apiBase=$('apiUrl').value.trim().replace(/\/$/,'');if(!apiBase)throw Error('Set your backend URL in Connection first.');return apiBase}
-async function request(path,opts={}){const url=base()+path;let res;try{res=await fetch(url,{...opts,headers:{'Content-Type':'application/json',...(opts.headers||{})}})}catch(err){throw Error('Could not reach backend. Check the Replit deployment URL, deployment status, and CORS settings. Details: '+(err.message||'Network error'))}const raw=await res.text();let data;try{data=raw?JSON.parse(raw):{}}catch{const preview=raw.replace(/\\s+/g,' ').slice(0,180);throw Error('Backend returned non-JSON data (HTTP '+res.status+', '+(res.headers.get('content-type')||'unknown content type')+'). Response: '+(preview||'[empty body]'))}if(!res.ok)throw Error(data.error||data.message||('Request failed (HTTP '+res.status+').'));return data}
-async function health(){try{const d=await request('/api/health');if(d.ok!==true)throw Error('Health endpoint responded, but did not return { ok: true }. Check that the Replit Express API is running, not a frontend preview.');setHealth(true,'Backend online · '+(d.version||'API'));show('Backend health check passed. Service: '+(d.service||'API'));log('Backend health check passed.');return true}catch(e){setHealth(false,'Backend unavailable');show(e.message,true);log('Backend check failed: '+e.message);return false}}
-$('settingsForm').addEventListener('submit',e=>{e.preventDefault();try{apiBase=base();localStorage.setItem('blooketjs_api',apiBase);show('Backend URL saved in this browser.');log('Backend URL saved.');health()}catch(err){show(err.message,true)}});
-$('testConnection').addEventListener('click',health);
-$('joinForm').addEventListener('submit',async e=>{e.preventDefault();clearResult();const btn=e.submitter;btn.disabled=true;try{const d=await request('/api/game/join',{method:'POST',body:JSON.stringify({pin:$('pin').value.trim(),name:$('playerName').value.trim(),blook:$('blook').value})});show('Join request sent for '+d.name+' to game '+d.pin+'. This is not a server-confirmed join; check the live lobby.');log('Join request sent for game '+d.pin+'.')}catch(err){show(err.message,true);log('Join failed: '+err.message)}finally{btn.disabled=false}});
-$('hostForm').addEventListener('submit',async e=>{e.preventDefault();clearResult();const btn=e.submitter;btn.disabled=true;try{const token=$('hostToken').value;const d=await request('/api/game/host',{method:'POST',headers:{Authorization:token},body:JSON.stringify({hostName:$('hostName').value.trim(),setId:$('setId').value.trim(),gameMode:$('gameMode').value,modeSetting:$('modeSetting').value,isPlus:$('plus').value==='true'})});show('Host request accepted. Game PIN: '+d.gamePin+'\nOpen Blooket host to verify that the lobby is active.');log('Host request returned game PIN '+d.gamePin+'.');$('hostToken').value=''}catch(err){show(err.message,true);log('Host request failed: '+err.message)}finally{btn.disabled=false}});
-$('setForm').addEventListener('submit',async e=>{e.preventDefault();clearResult();const btn=e.submitter;btn.disabled=true;try{const token=$('setToken').value;const d=await request('/api/sets',{method:'POST',headers:{Authorization:token},body:JSON.stringify({author:$('author').value.trim(),title:$('title').value.trim(),description:$('description').value.trim(),isPrivate:$('privateSet').value==='true'})});show('Set creation request completed. Response: '+JSON.stringify(d.result||d,null,2));log('Question set creation request completed.');$('setToken').value=''}catch(err){show(err.message,true);log('Set creation failed: '+err.message)}finally{btn.disabled=false}});
-$('openPlay').onclick=()=>window.open('https://play.blooket.com/','_blank','noopener');$('openHost').onclick=()=>window.open('https://www.blooket.com/','_blank','noopener');
-if(apiBase)health();
+  const $ = id => document.getElementById(id);
+  const storageKey = "blooketjs_railway_api";
+  const savedUrl = localStorage.getItem(storageKey) || "";
+  $("apiUrl").value = savedUrl;
+
+  function setStatus(ok, label) {
+    $("healthDot").style.background = ok ? "var(--mint)" : "var(--warn)";
+    $("healthText").textContent = label;
+    $("backendState").textContent = ok ? "Online" : "Unavailable";
+  }
+
+  function show(message, error = false) {
+    const el = $("result");
+    el.textContent = message;
+    el.className = "result show" + (error ? " error" : "");
+  }
+
+  function log(message) {
+    $("activity").textContent = new Date().toLocaleTimeString() + " — " + message;
+  }
+
+  function getBaseUrl() {
+    const raw = $("apiUrl").value.trim().replace(/\/+$/, "");
+    if (!raw) throw new Error("Enter your Railway API URL first.");
+    const url = new URL(raw);
+    if (url.protocol !== "https:" && url.hostname !== "localhost" && url.hostname !== "127.0.0.1") {
+      throw new Error("Use the HTTPS Railway domain.");
+    }
+    return url.origin;
+  }
+
+  async function testConnection() {
+    let base;
+    try { base = getBaseUrl(); }
+    catch (error) { setStatus(false, "Backend not configured"); show(error.message, true); return; }
+
+    $("testConnection").disabled = true;
+    try {
+      const [healthResponse, statusResponse] = await Promise.all([
+        fetch(base + "/api/health", { headers: { Accept: "application/json" } }),
+        fetch(base + "/api/integration/status", { headers: { Accept: "application/json" } })
+      ]);
+      if (!healthResponse.ok) throw new Error("Health check failed with HTTP " + healthResponse.status + ".");
+      if (!statusResponse.ok) throw new Error("Integration status check failed with HTTP " + statusResponse.status + ".");
+      const health = await healthResponse.json();
+      const integration = await statusResponse.json();
+      if (health.ok !== true) throw new Error("The backend did not return a healthy status.");
+      setStatus(true, "Railway backend online");
+      $("providerState").textContent = integration.authorized ? "Authorized" : "Not authorized";
+      show("Connected to " + (health.service || "the API") + " (version " + (health.version || "unknown") + "). " + (integration.message || "Integration status received."));
+      log("Railway health and integration-status checks passed.");
+    } catch (error) {
+      setStatus(false, "Backend unavailable");
+      $("providerState").textContent = "Not checked";
+      show(error.message || "Could not reach the Railway service. Check its deployment and public domain.", true);
+      log("Connection check failed.");
+    } finally {
+      $("testConnection").disabled = false;
+    }
+  }
+
+  $("connectionForm").addEventListener("submit", event => {
+    event.preventDefault();
+    try {
+      const base = getBaseUrl();
+      $("apiUrl").value = base;
+      localStorage.setItem(storageKey, base);
+      show("Railway API URL saved in this browser. Testing the service now.");
+      testConnection();
+    } catch (error) {
+      show(error.message, true);
+    }
+  });
+  $("testConnection").addEventListener("click", testConnection);
+  if (savedUrl) testConnection();
 </script>
-</body></html>
+</body>
+</html>
