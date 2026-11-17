@@ -1,0 +1,18 @@
+{
+  "name": "blooketjs-connector",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A browser workspace and Node API adapter for the community Blooket wrapper.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "blooket": "github:phuc3asu/blooket-wrapper#main",
+    "express": "^4.21.2"
+  }
+}
