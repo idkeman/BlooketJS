@@ -1,8 +1,8 @@
 {
   "name": "blooketjs-connector",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
-  "description": "A browser UI plus a Node API adapter for the community Blooket wrapper.",
+  "description": "A GitHub Pages dashboard and lightweight Railway API foundation for an authorized Blooket integration.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,7 +13,6 @@
     "node": ">=20"
   },
   "dependencies": {
-    "blooket": "github:phuc3asu/blooket-wrapper#main",
     "express": "^4.21.2"
   }
 }
