@@ -1,0 +1,12 @@
+entrypoint = "server.js"
+run = "npm start"
+onBoot = "npm install"
+
+[deployment]
+build = "npm install"
+run = "npm start"
+ignorePorts = false
+
+[[ports]]
+localPort = 3000
+externalPort = 80
