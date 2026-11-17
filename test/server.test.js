@@ -26,7 +26,7 @@ test("health endpoint returns JSON with ok=true", async () => {
   });
 
   assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") || "", /application\\/json/i);
+  assert.match(response.headers.get("content-type") || "", /application\/json/i);
   assert.equal(response.headers.get("access-control-allow-origin"), "https://idkeman.github.io");
 
   const body = await response.json();
@@ -52,7 +52,7 @@ test("CORS preflight accepts GitHub Pages and Authorization", async () => {
 test("unknown API routes return JSON 404", async () => {
   const response = await fetch(baseUrl + "/api/not-a-real-route");
   assert.equal(response.status, 404);
-  assert.match(response.headers.get("content-type") || "", /application\\/json/i);
+  assert.match(response.headers.get("content-type") || "", /application\/json/i);
   const body = await response.json();
   assert.equal(body.error, "API route not found.");
 });
