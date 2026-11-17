@@ -8,8 +8,7 @@ let baseUrl;
 test.before(async () => {
   server = app.listen(0, "127.0.0.1");
   await new Promise(resolve => server.once("listening", resolve));
-  const address = server.address();
-  baseUrl = "http://127.0.0.1:" + address.port;
+  baseUrl = "http://127.0.0.1:" + server.address().port;
 });
 
 test.after(async () => {
@@ -20,7 +19,7 @@ test.after(async () => {
   }
 });
 
-test("health endpoint returns JSON with ok=true", async () => {
+test("health endpoint returns Railway-ready JSON", async () => {
   const response = await fetch(baseUrl + "/api/health", {
     headers: { Origin: "https://idkeman.github.io" }
   });
@@ -31,22 +30,55 @@ test("health endpoint returns JSON with ok=true", async () => {
 
   const body = await response.json();
   assert.equal(body.ok, true);
-  assert.equal(body.service, "BlooketJS API");
+  assert.equal(body.service, "BlooketJS Railway API");
+  assert.equal(body.version, "0.2.0");
 });
 
-test("CORS preflight accepts GitHub Pages and Authorization", async () => {
-  const response = await fetch(baseUrl + "/api/game/host", {
+test("integration status is explicit that Blooket access is not authorized", async () => {
+  const response = await fetch(baseUrl + "/api/integration/status");
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.provider, "blooket");
+  assert.equal(body.authorized, false);
+  assert.equal(body.connected, false);
+  assert.deepEqual(body.capabilities, []);
+});
+
+test("legacy game and set operations are disabled", async () => {
+  for (const path of ["/api/game/join", "/api/game/host", "/api/sets"]) {
+    const response = await fetch(baseUrl + path, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ example: true })
+    });
+    assert.equal(response.status, 501, path);
+    const body = await response.json();
+    assert.equal(body.ok, false);
+    assert.match(body.error, /disabled/i);
+  }
+});
+
+test("CORS preflight allows the GitHub Pages dashboard", async () => {
+  const response = await fetch(baseUrl + "/api/integration/status", {
     method: "OPTIONS",
     headers: {
       Origin: "https://idkeman.github.io",
-      "Access-Control-Request-Method": "POST",
-      "Access-Control-Request-Headers": "content-type,authorization"
+      "Access-Control-Request-Method": "GET"
     }
   });
 
   assert.equal(response.status, 204);
   assert.equal(response.headers.get("access-control-allow-origin"), "https://idkeman.github.io");
-  assert.match(response.headers.get("access-control-allow-headers") || "", /authorization/i);
+  assert.match(response.headers.get("access-control-allow-methods") || "", /GET/i);
+});
+
+test("CORS rejects an unrelated website origin", async () => {
+  const response = await fetch(baseUrl + "/api/health", {
+    headers: { Origin: "https://example.invalid" }
+  });
+  assert.equal(response.status, 403);
+  const body = await response.json();
+  assert.match(body.error, /origin is not allowed/i);
 });
 
 test("unknown API routes return JSON 404", async () => {
