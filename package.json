@@ -1,12 +1,13 @@
 {
   "name": "blooketjs-connector",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "A browser workspace and Node API adapter for the community Blooket wrapper.",
+  "description": "A browser UI plus a Node API adapter for the community Blooket wrapper.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js"
+    "check": "node --check server.js && node --check test/server.test.js",
+    "test": "node --test"
   },
   "engines": {
     "node": ">=20"
