@@ -104,7 +104,7 @@ app.get("/api/health", (_req, res) => {
 
 app.post("/api/game/join", (req, res) => run(res, async () => {
   const pin = text(String(req.body.pin || ""), 8, "Game PIN");
-  if (!/^\\d{4,8}$/.test(pin)) {
+  if (!/^\d{4,8}$/.test(pin)) {
     throw new Error("Game PIN must contain 4–8 digits.");
   }
 
