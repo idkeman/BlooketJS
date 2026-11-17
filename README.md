@@ -1,23 +1,42 @@
 # BlooketJS Connector
 
-A browser UI plus a Node.js API service that adapts the community [phuc3asu/blooket-wrapper](https://github.com/phuc3asu/blooket-wrapper) library.
+A static browser UI plus a Node.js API service for the unofficial
+[phuc3asu/blooket-wrapper](https://github.com/phuc3asu/blooket-wrapper) library.
 
-## What is implemented
+## Implemented API
 
-- **Player join request:** submits one player name and selected Blook to a live game.
-- **Host creation request:** calls the upstream wrapper's game-creation method using a Blooket authorization token supplied for that request.
-- **Question set creation:** creates a set shell through the wrapper.
-- **Backend health check:** verifies that the separate Node service is reachable.
+- `GET /api/health` — JSON health check.
+- `POST /api/game/join` — submits one player join request.
+- `POST /api/game/host` — requests a hosted game using an authorization token.
+- `POST /api/sets` — requests creation of a question-set shell.
 
-## Important compatibility limits
+The API is a Node.js Express service. The GitHub Pages site is static and must
+point to the public URL of this separate API service.
 
-The upstream wrapper is an old, unofficial library using undocumented Blooket endpoints. Its join event is emitted before the WebSocket server confirms the join, and its host method returns a PIN before the host WebSocket setup is confirmed. The UI therefore labels these as requests, not confirmed live sessions. Current Blooket compatibility must be tested against a real account and game.
+## Replit setup
 
-The upstream library does not implement a full live host controller, player roster/event feed, question editor, or reliable session state. This repository does not pretend those features exist.
+This repository includes a `.replit` configuration that runs the Express API
+for both the workspace Run command and the published deployment:
 
-Mass joining/flooding, answer extraction, reward manipulation, and game interference methods are intentionally not exposed.
+- Build command: `npm install`
+- Run command: `npm start`
+- Server entrypoint: `server.js`
 
-## Run locally
+To use this repository on Replit, import **this GitHub repository**
+(`idkeman/BlooketJS`) as a Replit App. Do not publish a separate React starter
+project: that project does not contain this repository's API routes. After
+importing, publish the imported project and set the GitHub Pages site's API URL
+to the resulting Replit deployment URL.
+
+The server listens on `0.0.0.0` and uses Replit's assigned `PORT` environment
+variable. The `.replit` deployment run command explicitly starts
+`npm start`, which runs `node server.js`.
+
+Set `ALLOWED_ORIGINS` in Replit Secrets to a comma-separated list of exact
+origins when you need to change the defaults. The default includes
+`https://idkeman.github.io`.
+
+## Local development
 
 Requires Node.js 20+.
 
@@ -26,28 +45,41 @@ npm install
 npm start
 ```
 
-The API listens on port 3000. Open `index.html` with a local static server (for example, VS Code Live Server) and set the API URL to `http://localhost:3000` in **Connection**.
+The API listens on port 3000 locally. Open `index.html` using a static web
+server, then set the API URL to `http://localhost:3000` in the Connection tab.
 
-## Deploy the backend
+Run validation and smoke tests with:
 
-This repository includes `render.yaml` for Render Blueprint deployment:
+```sh
+npm run check
+npm test
+```
 
-1. Push this repository to GitHub.
-2. In Render, create a new Blueprint and select this repository.
-3. Deploy the `blooketjs-api` service.
-4. Copy its public service URL.
-5. Open the GitHub Pages site, go to **Connection**, paste the URL, and test it.
+## Compatibility limits
 
-The API allows the GitHub Pages origin by default. If your Pages URL changes, update `ALLOWED_ORIGINS` in Render to include the exact origin.
+The upstream wrapper is old and unofficial. It uses undocumented Blooket
+endpoints. Its join event can fire before the game server confirms entry, and
+its host method can return a PIN before the lobby is confirmed. The connector
+therefore reports a request as unconfirmed until the player or host is visible
+in Blooket itself.
+
+The upstream library does not provide a complete live host controller, player
+roster/event feed, full question editor, or reliable session state. Mass
+joining/flooding, answer extraction, reward manipulation, and game interference
+methods are intentionally not exposed.
 
 ## Credentials
 
-- Never enter your Blooket password into this project.
-- Host and set creation accept an authorization token only for the current request.
-- The browser does not store account tokens in local storage.
-- Use only a backend deployment you control. The backend operator can technically observe incoming requests; do not send tokens to a third-party service.
-- Do not commit tokens, passwords, or `.env` files.
+- Never enter your Blooket password.
+- Host and set creation use an authorization token for that request only.
+- The browser does not save account tokens in local storage.
+- The backend operator can technically observe incoming requests. Only send
+  tokens to a backend deployment you control.
+- Never commit tokens, passwords, or `.env` files.
 
-## Upstream attribution
+## Attribution
 
-The `blooket` dependency is sourced from [phuc3asu/blooket-wrapper](https://github.com/phuc3asu/blooket-wrapper), distributed under the MIT License (Copyright 2021 glizzz_y). The original license is available in that repository. This connector is independent and is not endorsed by Blooket.
+The `blooket` dependency comes from
+[phuc3asu/blooket-wrapper](https://github.com/phuc3asu/blooket-wrapper), an
+unofficial community project distributed under its MIT License. This connector
+is independent and is not affiliated with or endorsed by Blooket.
